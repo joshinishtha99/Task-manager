@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tasks")
@@ -15,13 +15,14 @@ public class Task {
 
     private String description;
 
-    private LocalDate dueDate;
-
     private boolean completed;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Column(name = "due_date")
+    private LocalDateTime dueDate;
 
     // Getters and setters...
 
@@ -49,14 +50,6 @@ public class Task {
         this.description = description;
     }
 
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
-
     public boolean isCompleted() {
         return completed;
     }
@@ -71,5 +64,13 @@ public class Task {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public LocalDateTime getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDateTime dueDate) {
+        this.dueDate = dueDate;
     }
 }

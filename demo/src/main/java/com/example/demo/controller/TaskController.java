@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import java.time.LocalDateTime;
+
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -37,13 +40,17 @@ public class TaskController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/{id}")
+   @PutMapping("/{id}")
 public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task updatedTask) {
     return taskRepository.findById(id)
         .map(task -> {
             task.setTitle(updatedTask.getTitle());
             task.setDescription(updatedTask.getDescription());
             task.setCompleted(updatedTask.isCompleted());
+            task.setDueDate(updatedTask.getDueDate());  // Add this line
+            if (updatedTask.getCategory() != null && updatedTask.getCategory().getId() != null) {
+                categoryRepository.findById(updatedTask.getCategory().getId()).ifPresent(task::setCategory);
+            }
             taskRepository.save(task);
             return ResponseEntity.ok(task);
         })
