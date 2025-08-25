@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import TaskForm from './TaskForm';
 import TaskCard from './TaskCard';
 import Dashboard from './Dashboard';
+import logo from './assests/logo.jpg';  // Adjust path accordingly
+import bgImage from './assests/bgImage.jpg'
+
 
 
 
 
 import {
-  Container, Typography, TextField, Checkbox, FormControlLabel,
+  Container, Typography,Box, TextField, Checkbox, FormControlLabel,
   Button, List, ListItem, ListItemText, IconButton, Stack
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -102,28 +105,71 @@ const handleSubmit = (e) => {
     setForm({ title: '', description: '', completed: false });
   };
 
+  const handleMarkCompleted = (id) => {
+  // Find the task, set completed to true, and update backend
+  const task = tasks.find(t => t.id === id);
+  if (!task) return;
+  fetch(`${backendUrl}/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: authHeader },
+    body: JSON.stringify({ ...task, completed: true }),
+  })
+    .then(res => {
+      if (!res.ok) throw new Error('Update failed');
+      return res.json();
+    })
+    .then(() => fetchTasks())
+    .catch(console.error);
+};
+
   
 
 return (
-    <Container maxWidth="sm" sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>Task Manager</Typography>
+  <div
+    style={{
+      backgroundImage: `url(${bgImage})`,  // Make sure your variable is bgImage (not background)
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center',
+      minHeight: '100vh',
+      padding: '20px',
+    }}
+  >
+    <Container maxWidth="sm" sx={{ bgcolor: 'rgba(255,255,255,0.8)', borderRadius: 2, p: 3 }}>
+      
+      <Box 
+        sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          mb: 4 
+        }}
+      >
+        <img src={logo} alt="Logo" style={{ height: 60, marginRight: 10 }} />
+        <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+          Task Manager
+        </Typography>
+      </Box>
 
       <TaskForm form={form} setForm={setForm} onSubmit={handleSubmit} />
 
-    {tasks.length === 0 ? (
-  <Typography>No tasks found.</Typography>
-) : (
-  tasks.map(task => (
-    <TaskCard
-      key={task.id}
-      task={task}
-      onEdit={startEdit}
-      onDelete={handleDelete}
-    />
-  ))
-)}
-    </Container>
-  );
-}
+      {tasks.length === 0 ? (
+        <Typography>No tasks found.</Typography>
+      ) : (
+        tasks.map(task => (
+          <TaskCard
+            key={task.id}
+            task={task}
+            onEdit={startEdit}
+            onDelete={handleDelete}
+            onMarkCompleted={handleMarkCompleted}
+          />
+        ))
+      )}
 
+      <Dashboard tasks={tasks} />
+    </Container>
+  </div>
+)}
 export default App;
+

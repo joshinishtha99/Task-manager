@@ -1,9 +1,10 @@
 import React from 'react';
-import { Card, CardContent, Typography, Chip, Stack, IconButton } from '@mui/material';
+import { Card, CardContent, Typography, Chip, Stack, IconButton, Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import DoneIcon from '@mui/icons-material/Done';
 
-function TaskCard({ task, onEdit, onDelete }) {
+function TaskCard({ task, onEdit, onDelete, onMarkCompleted }) {
   const isOverdue = task.dueDate ? new Date(task.dueDate) < new Date() && !task.completed : false;
 
   return (
@@ -32,6 +33,12 @@ function TaskCard({ task, onEdit, onDelete }) {
           </div>
           <Stack direction="column" alignItems="flex-end" spacing={1}>
             <div>
+              {/* Only show if NOT completed */}
+              {!task.completed && (
+                <IconButton aria-label="mark completed" color="primary" onClick={() => onMarkCompleted(task.id)}>
+                  <DoneIcon />
+                </IconButton>
+              )}
               <IconButton aria-label="edit" onClick={() => onEdit(task)}>
                 <EditIcon />
               </IconButton>

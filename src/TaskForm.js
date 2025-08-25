@@ -20,20 +20,21 @@ function TaskForm({ form, setForm, onSubmit }) {
         fullWidth
         multiline
       />
-      <div style={{ marginTop: 16, marginBottom: 16 }}>
-        <label>Due Date:</label>
-        <DatePicker
-          selected={form.dueDate ? new Date(form.dueDate) : null}
-          onChange={date => setForm({ ...form, dueDate: date })}
-          showTimeSelect
-          timeFormat="HH:mm"
-          timeIntervals={15}
-          dateFormat="MMMM d, yyyy h:mm aa"
-          placeholderText="Select due date and time"
-          isClearable
-          className="date-picker"
-        />
-      </div>
+      <div style={{ display: 'flex', alignItems: 'center', marginTop: 16, marginBottom: 16, gap: 8 }}>
+  <label>Due Date:</label>
+  <DatePicker
+    selected={form.dueDate ? new Date(form.dueDate) : null}
+    onChange={date => setForm({ ...form, dueDate: date })}
+    showTimeSelect
+    timeFormat="HH:mm"
+    timeIntervals={15}
+    dateFormat="MMMM d, yyyy h:mm aa"
+    placeholderText="Select due date and time"
+    isClearable
+    className="date-picker"
+  />
+</div>
+
       <Button type="submit" variant="contained" color="primary">
         {form.id ? 'Save Changes' : 'Add Task'}
       </Button>
